@@ -1,0 +1,17 @@
+{
+	"app": {
+		"environment": "test",
+		"features": ["email"]
+	},
+	"email": {
+		"from": "test@example.com",
+		"to": "test@example.com",
+		"templates": {
+			"projectRequest": {
+				"subject": "[TEST] Projet test : {{projectName}}",
+				"companyName": "Test Company",
+				"websiteUrl": "https://test.example.com"
+			}
+		}
+	}
+}

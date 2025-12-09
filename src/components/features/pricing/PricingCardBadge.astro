@@ -1,0 +1,36 @@
+---
+import { cva } from 'class-variance-authority'
+import { cn } from '@/lib/core/utils'
+import type { Plan } from '@/types/plans'
+
+export interface Props {
+	plan: Plan
+	badge: string
+}
+
+const { plan, badge } = Astro.props
+
+const badgeVariants = cva(
+	[
+		'rounded-full px-3 py-0.5 text-xs font-bold text-white',
+		'sm:px-4 sm:py-1 sm:text-sm',
+		'shadow-lg',
+		'bg-gradient-to-r',
+	],
+	{
+		variants: {
+			plan: {
+				starter: 'from-brand-blue to-brand-blue-dark',
+				business: 'from-brand-green to-brand-green-dark',
+				enterprise: 'from-brand-blue-dark to-brand-green-dark',
+			},
+		},
+	},
+)
+---
+
+<div class="absolute -top-3 left-1/2 z-20 -translate-x-1/2">
+	<div class={cn(badgeVariants({ plan }))}>
+		{badge}
+	</div>
+</div>

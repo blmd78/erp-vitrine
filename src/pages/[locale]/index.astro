@@ -1,0 +1,82 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Header from '@/components/layout/header/Header.astro'
+import Footer from '@/components/layout/footer/Footer.astro'
+import PremiumHero from '@/components/features/marketing/hero/PremiumHero.astro'
+import TrustedBy from '@/components/features/marketing/trust/TrustedBy.astro'
+import WorkflowSection from '@/components/features/marketing/workflow/WorkflowSection.astro'
+import TechTransformation from '@/components/features/marketing/tech/TechTransformation.astro'
+import TechExpertiseBento from '@/components/features/marketing/tech-expertise/TechExpertiseBento.astro'
+import BentoQualityBadges from '@/components/features/marketing/tech-expertise/components/BentoQualityBadges'
+import BentoDevTools from '@/components/features/marketing/tech-expertise/components/BentoDevTools'
+import BentoCodeExample from '@/components/features/marketing/tech-expertise/components/BentoCodeExample.astro'
+import BentoPerformanceMetrics from '@/components/features/marketing/tech-expertise/components/BentoPerformanceMetrics'
+import BentoLighthouse from '@/components/features/marketing/tech-expertise/components/BentoLighthouse'
+import BentoSEO from '@/components/features/marketing/tech-expertise/components/BentoSEO'
+import CTASection from '@/components/features/marketing/cta/CTASection.astro'
+
+const { t } = Astro.locals
+
+const title = t('common.meta.homepage.title')
+const description = t('common.meta.homepage.description')
+const trustedBy = t('home.trustedBy')
+const techExpertise = t('home.techExpertise')
+---
+
+<BaseLayout title={title} description={description}>
+	<div class="relative flex min-h-screen flex-col">
+		<Header />
+
+		<main class="flex flex-col">
+			<!-- Hero Section -->
+			<PremiumHero />
+
+			<!-- Trusted By Section -->
+			<TrustedBy title={trustedBy.title} subtitle={trustedBy.subtitle} />
+
+			<!-- Workflow Process Section -->
+			<WorkflowSection />
+
+			<!-- Tech Transformation Section -->
+			<TechTransformation />
+
+			<!-- Tech Expertise Section -->
+			<TechExpertiseBento
+				title={techExpertise.title}
+				subtitle={techExpertise.subtitle}
+			>
+				<BentoQualityBadges
+					data={techExpertise.qualityBadges}
+					client:load
+				/>
+				<BentoDevTools data={techExpertise.tools} client:load />
+				<BentoCodeExample
+					title={techExpertise.codeExample.title}
+					code={techExpertise.codeExample.code}
+				/>
+				<BentoPerformanceMetrics
+					title={techExpertise.metrics.performance.title}
+					data={techExpertise.metrics.performance}
+					client:load
+				/>
+				<BentoLighthouse
+					title={techExpertise.metrics.lighthouse.title}
+					data={techExpertise.metrics.lighthouse}
+					client:load
+				/>
+				<BentoSEO
+					title={techExpertise.metrics.seo.title}
+					score={techExpertise.metrics.seo.score}
+					label={techExpertise.metrics.labels.seoPerformance}
+					metrics={techExpertise.metrics.seo.metrics}
+					client:load
+				/>
+			</TechExpertiseBento>
+
+			<!-- CTA Section -->
+			<CTASection />
+		</main>
+
+		<Footer />
+	</div>
+</BaseLayout>

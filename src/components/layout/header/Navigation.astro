@@ -1,0 +1,50 @@
+---
+import { cn } from '@/lib/core/utils'
+import { ChevronRight } from 'lucide-react'
+import { NAVIGATION_LINKS } from '@/lib/constants'
+
+interface Props {
+	variant?: 'desktop' | 'mobile'
+}
+
+// Use new i18n system from middleware
+const { t } = Astro.locals
+const { variant = 'desktop' } = Astro.props
+---
+
+<nav
+	class={cn(
+		variant === 'desktop'
+			? 'hidden md:flex items-center space-x-6'
+			: 'flex-1 px-4 sm:px-6 lg:px-8 py-8',
+	)}
+>
+	{
+		variant === 'desktop' ? (
+			NAVIGATION_LINKS.map((link, index) => (
+				<a
+					href={link.href}
+					class="transition-smooth animate-fade-in-up relative rounded-md px-1.5 py-0.5 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+					style={`animation-delay: ${index * 100}ms`}
+				>
+					{t(link.labelKey)}
+				</a>
+			))
+		) : (
+			<div class="space-y-2">
+				{NAVIGATION_LINKS.map((link, index) => (
+					<a
+						href={link.href}
+						class="group transition-smooth animate-fade-in-up flex items-center justify-between border-b border-gray-100/50 px-2 py-4 text-gray-700 last:border-b-0 hover:translate-x-2 hover:text-gray-900"
+						style={`animation-delay: ${index * 100}ms`}
+					>
+						<span class="transition-smooth text-xl font-medium group-hover:font-semibold">
+							{t(link.labelKey)}
+						</span>
+						<ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-smooth" />
+					</a>
+				))}
+			</div>
+		)
+	}
+</nav>

@@ -1,0 +1,139 @@
+---
+/**
+ * Composant SEO centralisé pour NextNode
+ * Optimisé pour le référencement local Paris/Île-de-France
+ */
+import { generateSchemaScript } from '@/lib/seo/schema'
+
+export interface Props {
+	title: string
+	description?: string
+	image?: string
+	type?: 'website' | 'article' | 'service'
+	publishedTime?: string
+	modifiedTime?: string
+	canonical?: string
+	noindex?: boolean
+}
+
+// Récupération du contexte i18n depuis le middleware
+const { locale, t } = Astro.locals
+
+const {
+	title,
+	description = t('common.meta.defaultDescription'),
+	image = '/og-image.png',
+	type = 'website',
+	publishedTime,
+	modifiedTime,
+	canonical,
+	noindex = false,
+} = Astro.props
+
+// Construction de l'URL canonique
+const canonicalURL = new URL(canonical ?? Astro.url.pathname, Astro.site)
+
+// Image absolue pour Open Graph
+const absoluteImage = new URL(image, Astro.site)
+
+// Génération du schema JSON-LD
+const schemaScript = generateSchemaScript(locale as 'en' | 'fr')
+
+// Meta title optimisé avec marque et localisation
+const optimizedTitle = title.includes('NextNode')
+	? title
+	: locale === 'fr'
+		? `${title} | NextNode - Agence Web Paris`
+		: `${title} | NextNode - Web Agency Paris`
+
+// Hreflang URLs
+const currentPath = Astro.url.pathname.replace(/^\/(en|fr)/, '') || '/'
+const baseURL = Astro.site?.origin || 'https://nextnode.fr'
+const englishURL = `${baseURL}${currentPath === '/' ? '' : currentPath}`
+const frenchURL = `${baseURL}/fr${currentPath === '/' ? '' : currentPath}`
+---
+
+<!-- Meta tags principaux -->
+<title>{optimizedTitle}</title>
+<meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Hreflang pour SEO international -->
+<link rel="alternate" hreflang="en" href={englishURL} />
+<link rel="alternate" hreflang="fr" href={frenchURL} />
+<link rel="alternate" hreflang="x-default" href={englishURL} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content="NextNode" />
+<meta property="og:title" content={optimizedTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={absoluteImage} />
+<meta property="og:image:alt" content={title} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:locale" content={locale === 'fr' ? 'fr_FR' : 'en_US'} />
+{locale === 'fr' && <meta property="og:locale:alternate" content="en_US" />}
+{locale === 'en' && <meta property="og:locale:alternate" content="fr_FR" />}
+
+<!-- Articles/Blog metadata -->
+{
+	type === 'article' && publishedTime && (
+		<meta property="article:published_time" content={publishedTime} />
+	)
+}
+{
+	type === 'article' && modifiedTime && (
+		<meta property="article:modified_time" content={modifiedTime} />
+	)
+}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@NextNodeSolutions" />
+<meta name="twitter:title" content={optimizedTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={absoluteImage} />
+<meta name="twitter:image:alt" content={title} />
+
+<!-- SEO technique -->
+<meta name="geo.region" content="FR-75" />
+<meta name="geo.placename" content="Paris" />
+<meta name="geo.position" content="48.8566;2.3522" />
+<meta name="ICBM" content="48.8566, 2.3522" />
+
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json" set:html={schemaScript} is:inline />
+
+<!-- DNS prefetch pour les domaines externes -->
+<link rel="dns-prefetch" href="//www.google-analytics.com" />
+
+<!-- Favicon optimisé -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<!-- Theme color pour mobile -->
+<meta name="theme-color" content="#000000" />
+<meta name="msapplication-TileColor" content="#000000" />
+
+{/* Injection de variables pour le JavaScript côté client */}
+<script
+	is:inline
+	define:vars={{
+		currentLocale: locale,
+		canonicalUrl: canonicalURL.href,
+		schemaData: JSON.parse(schemaScript),
+	}}
+>
+	// Variables globales pour le client-side
+	window.__NEXTNODE_SEO__ = {
+		locale: currentLocale,
+		canonical: canonicalUrl,
+		schema: schemaData,
+	}
+</script>

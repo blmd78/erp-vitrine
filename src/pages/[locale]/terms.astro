@@ -1,0 +1,167 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Header from '@/components/layout/header/Header.astro'
+import Footer from '@/components/layout/footer/Footer.astro'
+import LegalContent from '@/components/features/legal/LegalContent.astro'
+import Section from '@/components/features/legal/Section.astro'
+// Use new i18n system from middleware
+const { t } = Astro.locals
+
+const pageTitle = t('terms.title')
+const pageDescription = t('terms.description')
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+	<Header />
+
+	<main class="min-h-screen bg-white dark:bg-gray-900">
+		<LegalContent
+			title={pageTitle}
+			lastUpdated={t('terms.lastUpdated.date')}
+		>
+			<Section title={t('terms.intro.title')}>
+				<p>{t('terms.intro.content')}</p>
+			</Section>
+
+			<Section title={t('terms.definitions.title')} id="definitions">
+				<p>{t('terms.definitions.intro')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>
+						<strong>{t('terms.definitions.service.term')}:</strong>
+						{t('terms.definitions.service.def')}
+					</li>
+					<li>
+						<strong>{t('terms.definitions.company.term')}:</strong>
+						{t('terms.definitions.company.def')}
+					</li>
+					<li>
+						<strong>{t('terms.definitions.user.term')}:</strong>
+						{t('terms.definitions.user.def')}
+					</li>
+					<li>
+						<strong>{t('terms.definitions.content.term')}:</strong>
+						{t('terms.definitions.content.def')}
+					</li>
+				</ul>
+			</Section>
+
+			<Section title={t('terms.acceptance.title')} id="acceptance">
+				<p>{t('terms.acceptance.content1')}</p>
+				<p>{t('terms.acceptance.content2')}</p>
+			</Section>
+
+			<Section title={t('terms.services.title')} id="services">
+				<p>{t('terms.services.intro')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>{t('terms.services.item1')}</li>
+					<li>{t('terms.services.item2')}</li>
+					<li>{t('terms.services.item3')}</li>
+					<li>{t('terms.services.item4')}</li>
+				</ul>
+				<p>{t('terms.services.disclaimer')}</p>
+			</Section>
+
+			<Section title={t('terms.userAccount.title')} id="user-account">
+				<p>{t('terms.userAccount.registration')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>{t('terms.userAccount.requirement1')}</li>
+					<li>{t('terms.userAccount.requirement2')}</li>
+					<li>{t('terms.userAccount.requirement3')}</li>
+					<li>{t('terms.userAccount.requirement4')}</li>
+				</ul>
+				<p>{t('terms.userAccount.termination')}</p>
+			</Section>
+
+			<Section title={t('terms.userConduct.title')} id="user-conduct">
+				<p>{t('terms.userConduct.intro')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>{t('terms.userConduct.prohibited1')}</li>
+					<li>{t('terms.userConduct.prohibited2')}</li>
+					<li>{t('terms.userConduct.prohibited3')}</li>
+					<li>{t('terms.userConduct.prohibited4')}</li>
+					<li>{t('terms.userConduct.prohibited5')}</li>
+					<li>{t('terms.userConduct.prohibited6')}</li>
+				</ul>
+			</Section>
+
+			<Section
+				title={t('terms.intellectual.title')}
+				id="intellectual-property"
+			>
+				<p>{t('terms.intellectual.content1')}</p>
+				<p>{t('terms.intellectual.content2')}</p>
+				<p>{t('terms.intellectual.content3')}</p>
+			</Section>
+
+			<Section title={t('terms.userContent.title')} id="user-content">
+				<p>{t('terms.userContent.ownership')}</p>
+				<p>{t('terms.userContent.license')}</p>
+				<p>{t('terms.userContent.responsibility')}</p>
+			</Section>
+
+			<Section title={t('terms.payment.title')} id="payment">
+				<p>{t('terms.payment.intro')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>{t('terms.payment.term1')}</li>
+					<li>{t('terms.payment.term2')}</li>
+					<li>{t('terms.payment.term3')}</li>
+					<li>{t('terms.payment.term4')}</li>
+				</ul>
+			</Section>
+
+			<Section title={t('terms.disclaimer.title')} id="disclaimer">
+				<p>{t('terms.disclaimer.content1')}</p>
+				<p>{t('terms.disclaimer.content2')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>{t('terms.disclaimer.item1')}</li>
+					<li>{t('terms.disclaimer.item2')}</li>
+					<li>{t('terms.disclaimer.item3')}</li>
+					<li>{t('terms.disclaimer.item4')}</li>
+				</ul>
+			</Section>
+
+			<Section title={t('terms.limitation.title')} id="limitation">
+				<p>{t('terms.limitation.content1')}</p>
+				<p>{t('terms.limitation.content2')}</p>
+			</Section>
+
+			<Section
+				title={t('terms.indemnification.title')}
+				id="indemnification"
+			>
+				<p>{t('terms.indemnification.content')}</p>
+			</Section>
+
+			<Section title={t('terms.termination.title')} id="termination">
+				<p>{t('terms.termination.content1')}</p>
+				<p>{t('terms.termination.content2')}</p>
+			</Section>
+
+			<Section title={t('terms.governing.title')} id="governing-law">
+				<p>{t('terms.governing.content')}</p>
+			</Section>
+
+			<Section title={t('terms.changes.title')} id="changes">
+				<p>{t('terms.changes.content1')}</p>
+				<p>{t('terms.changes.content2')}</p>
+			</Section>
+
+			<Section title={t('terms.contact.title')} id="contact">
+				<p>{t('terms.contact.intro')}</p>
+				<div class="mt-4 rounded-lg bg-gray-50 p-6 dark:bg-gray-800">
+					<p class="font-semibold">{t('terms.contact.company')}</p>
+					<p>
+						{t('terms.contact.email')}: <a
+							href="mailto:contact@nextnode.fr"
+							class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+							>contact@nextnode.fr</a
+						>
+					</p>
+					<p>{t('terms.contact.address')}</p>
+				</div>
+			</Section>
+		</LegalContent>
+	</main>
+
+	<Footer />
+</BaseLayout>

@@ -1,0 +1,30 @@
+# Railway.toml Configuration
+# NextNode Front - Astro SSR Application with Docker
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+watchPatterns = [
+    "src/**",
+    "public/**", 
+    "config/**",
+    "types/**",
+    "astro.config.mjs",
+    "package.json",
+    "pnpm-lock.yaml",
+    "tsconfig.json",
+    "Dockerfile",
+    "railway.toml"
+]
+
+[deploy]
+# Health check endpoint - Dedicated endpoint for monitoring
+healthcheckPath = "/health"
+healthcheckTimeout = 40
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+# Environment-specific configurations
+[environments.production.deploy]
+healthcheckTimeout = 20
+restartPolicyMaxRetries = 5

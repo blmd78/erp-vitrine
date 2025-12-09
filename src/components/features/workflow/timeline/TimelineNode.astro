@@ -1,0 +1,29 @@
+---
+import { STEP_COLORS } from '../workflow-constants'
+
+interface Props {
+	color: string
+	index: number
+}
+
+const { color, index } = Astro.props
+const nextColor = STEP_COLORS[(index + 1) % STEP_COLORS.length]
+---
+
+{/* Timeline node - fixed positions like before */}
+<div
+	class="absolute top-8 -left-12 z-10 flex h-4 w-4 items-center justify-center"
+>
+	<div
+		class="animate-scale-in h-4 w-4 rounded-full border-4 border-white bg-gradient-to-r shadow-lg"
+		style={`background: linear-gradient(135deg, ${color}, ${nextColor}); animation-delay: ${index * 200}ms`}
+	>
+	</div>
+</div>
+
+{/* Progress pulse effect */}
+<div
+	class="absolute top-6 -left-14 z-0 h-8 w-8 animate-ping rounded-full opacity-20"
+	style={`background: ${color}; animation-delay: ${index * 200 + 100}ms`}
+>
+</div>

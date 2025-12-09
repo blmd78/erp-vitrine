@@ -1,0 +1,81 @@
+@reference "./global.css";
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	font-family: var(--font-family-sans);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Component utility classes using @apply */
+
+/* Button patterns */
+.btn-icon {
+	@apply text-muted-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer rounded-full p-1.5 transition-all duration-300 hover:scale-110;
+}
+
+.btn-gradient-primary {
+	@apply bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl;
+}
+
+/* Common transitions */
+.transition-smooth {
+	@apply transition-all duration-300;
+}
+
+.transition-transform {
+	@apply transition-transform duration-300;
+}
+
+.transition-shadow {
+	@apply transition-shadow duration-300;
+}
+
+/* Container patterns */
+.card-container {
+	@apply border-border bg-card rounded-2xl border shadow-xl;
+}
+
+.card-base {
+	@apply rounded-2xl shadow-lg transition-shadow duration-300 hover:shadow-2xl;
+	@apply bg-card text-card-foreground;
+}
+
+/* Layout utilities */
+.flex-center {
+	@apply flex items-center justify-center;
+}
+
+.flex-between {
+	@apply flex items-center justify-between;
+}
+
+/* Text utilities */
+.text-muted {
+	@apply text-muted-foreground;
+}
+
+.text-heading {
+	@apply text-foreground;
+}
+
+/* Hover effects */
+.hover-lift {
+	@apply transition-transform duration-300 hover:scale-[1.05];
+}
+
+.hover-lift-sm {
+	@apply transition-transform duration-300 hover:scale-[1.02];
+}
+
+.hover-lift-lg {
+	@apply transition-transform duration-300 hover:scale-[1.1];
+}
+
+/* Animation patterns */
+.animate-enter {
+	@apply opacity-0;
+}

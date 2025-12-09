@@ -1,0 +1,17 @@
+{
+	"app": {
+		"environment": "prod",
+		"features": ["email", "i18n", "analytics"]
+	},
+	"email": {
+		"from": "noreply@nextnode.dev",
+		"to": "contact@nextnode.dev",
+		"templates": {
+			"projectRequest": {
+				"subject": "Nouvelle demande de projet : {{projectName}}",
+				"companyName": "NextNode",
+				"websiteUrl": "https://nextnode.dev"
+			}
+		}
+	}
+}

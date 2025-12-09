@@ -1,0 +1,47 @@
+---
+import { Code } from 'astro:components'
+import { Code2 } from 'lucide-react'
+
+import BentoCard from './BentoCard'
+
+interface Props {
+	readonly title: string
+	readonly code: string
+}
+
+const { title, code } = Astro.props
+---
+
+<BentoCard className="lg:col-span-2" client:load>
+	<div class="relative z-10">
+		<div class="mb-4 flex items-center gap-3">
+			<Code2 className="text-brand-blue h-6 w-6" />
+			<h3 class="text-xl font-bold text-white">{title}</h3>
+		</div>
+		<div class="code-container overflow-hidden rounded-lg">
+			<Code code={code} lang="typescript" theme="nord" />
+		</div>
+	</div>
+</BentoCard>
+
+<style>
+	/* Enhanced code block styling */
+	.code-container :global(.astro-code) {
+		font-family:
+			'JetBrains Mono', 'Fira Code', 'Fira Mono', Consolas,
+			'DejaVu Sans Mono', monospace;
+		font-size: 0.875rem; /* text-sm */
+		line-height: 1.6;
+		padding: 1rem;
+		margin: 0;
+		border-radius: 0.5rem;
+		background: #2e3440; /* Nord polar night */
+		overflow-x: auto;
+	}
+
+	/* Improve contrast for better readability */
+	.code-container :global(.astro-code code) {
+		display: block;
+		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+	}
+</style>

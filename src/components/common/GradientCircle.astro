@@ -1,0 +1,58 @@
+---
+// Astro component for gradient circle effects
+---
+
+<div class="animate-pulse-slow absolute top-20 right-1/5 -z-50 hidden md:block">
+	<div class="relative h-[200px] w-[200px]">
+		<div
+			class="animate-liquid small-circle from-brand-blue to-brand-green absolute inset-0 rounded-full bg-gradient-to-r opacity-50 blur-xl"
+		>
+		</div>
+		<div
+			class="animate-liquid small-circle from-brand-blue-dark to-brand-blue-light absolute inset-0 rounded-full bg-gradient-to-l opacity-50 blur-xl delay-700"
+		>
+		</div>
+	</div>
+</div>
+
+<!-- Central left gradient circle -->
+<div
+	class="animate-pulse-slow absolute bottom-1/3 left-1/4 -z-50 hidden md:block"
+>
+	<div class="relative h-[500px] w-[500px]">
+		<div
+			class="animate-liquid large-circle from-brand-blue to-brand-blue-soft absolute inset-0 rounded-full bg-gradient-to-br opacity-10 blur-xl"
+		>
+		</div>
+		<div
+			class="animate-liquid large-circle from-brand-green to-brand-green-light absolute inset-0 rounded-full bg-gradient-to-tr opacity-10 blur-xl delay-1000"
+		>
+		</div>
+	</div>
+</div>
+
+<style>
+	.small-circle {
+		--scale-1: 1.05;
+		--scale-2: 0.8;
+		--translate-x-1: 30px;
+		--translate-y-1: 30px;
+		--translate-x-2: -30px;
+		--translate-y-2: 15px;
+		--border-radius-1: 40% 60% 70% 30% / 40% 50% 50% 60%;
+		--border-radius-2: 70% 30% 50% 50% / 30% 30% 70% 70%;
+		--duration: 13s;
+	}
+
+	.large-circle {
+		--scale-1: 1.15;
+		--scale-2: 0.75;
+		--translate-x-1: 35px;
+		--translate-y-1: -20px;
+		--translate-x-2: -30px;
+		--translate-y-2: 30px;
+		--border-radius-1: 60% 40% 30% 70% / 60% 30% 70% 40%;
+		--border-radius-2: 40% 60% 70% 30% / 60% 40% 60% 40%;
+		--duration: 18s;
+	}
+</style>

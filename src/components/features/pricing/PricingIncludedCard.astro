@@ -1,0 +1,61 @@
+---
+import { cva } from 'class-variance-authority'
+import { cn } from '@/lib/core/utils'
+
+export interface Props {
+	title: string
+	description: string
+	details: readonly string[]
+	colorVariant: 'blue' | 'green' | 'dark'
+}
+
+const { title, description, details, colorVariant } = Astro.props
+
+// Card container variants
+const cardVariants = cva(
+	[
+		'group rounded-2xl border border-gray-200/50 p-6 sm:p-8',
+		'bg-white/80 backdrop-blur-sm',
+		'transition-all duration-500 hover:shadow-lg hover:-translate-y-1',
+	],
+	{
+		variants: {
+			colorVariant: {
+				blue: '',
+				green: '',
+				dark: '',
+			},
+		},
+	},
+)
+
+// Bullet point variants
+const bulletVariants = cva('mt-1 h-2 w-2 flex-shrink-0 rounded-full', {
+	variants: {
+		colorVariant: {
+			blue: 'bg-brand-blue',
+			green: 'bg-brand-green',
+			dark: 'bg-brand-blue-dark',
+		},
+	},
+})
+---
+
+<div class={cn(cardVariants({ colorVariant }))}>
+	<h4 class="mb-3 text-lg font-semibold text-gray-900 sm:mb-4 sm:text-xl">
+		{title}
+	</h4>
+	<p class="mb-4 text-sm text-gray-600 sm:mb-6 sm:text-base">
+		{description}
+	</p>
+	<ul class="space-y-3">
+		{
+			details.map(detail => (
+				<li class="flex items-start gap-3">
+					<div class={cn(bulletVariants({ colorVariant }))} />
+					<span class="text-sm text-gray-700">{detail}</span>
+				</li>
+			))
+		}
+	</ul>
+</div>

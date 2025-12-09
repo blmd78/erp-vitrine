@@ -1,0 +1,25 @@
+# Robots.txt optimisé pour NextNode - Agence Web Paris
+# Référencement local prioritaire sur Paris et Île-de-France
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_astro/
+Disallow: /debug/
+Disallow: /health
+Disallow: /metrics
+
+# Optimisation pour les moteurs de recherche français
+User-agent: Googlebot
+Allow: /fr/
+Allow: /
+Crawl-delay: 1
+
+# Priorité au contenu français pour le SEO local Paris
+User-agent: Bingbot
+Allow: /fr/
+Allow: /
+Crawl-delay: 1
+
+# Référence du sitemap pour l'indexation
+Sitemap: https://nextnode.fr/sitemap.xml

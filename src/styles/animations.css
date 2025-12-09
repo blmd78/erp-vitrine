@@ -1,0 +1,168 @@
+/* ============================================================================
+   ANIMATION CLASSES
+   Filtered version - Only essential animations for hero card and tech stack
+   Fade-in animations removed per user request
+   ============================================================================ */
+
+/* ============================================================================
+   SPECIALIZED ANIMATIONS
+   ============================================================================ */
+
+.animate-gradient-shift {
+	background: linear-gradient(
+		45deg,
+		var(--brand-blue) 0%,
+		var(--brand-green) 50%,
+		var(--brand-blue) 100%
+	);
+	background-size: 200% 200%;
+	animation: gradient-shift 8s ease infinite;
+}
+
+.cta-gradient-animation::before {
+	content: '';
+	background: linear-gradient(
+		90deg,
+		var(--brand-blue) 0%,
+		var(--brand-green) 50%,
+		var(--brand-blue) 100%
+	);
+	background-size: 200% 200%;
+	animation: gradient-shift 3s ease infinite;
+}
+
+.cta-gradient-animation:hover::before {
+	content: '';
+	background: linear-gradient(
+		90deg,
+		var(--brand-blue) 0%,
+		var(--brand-blue) 50%,
+		var(--brand-blue-dark) 100%
+	);
+	animation: none;
+}
+
+.animate-icon-pulse {
+	animation: icon-pulse 2s ease-in-out infinite;
+}
+
+/* ============================================================================
+   PULSE ANIMATIONS
+   ============================================================================ */
+
+.animate-pulse-slow {
+	animation: pulse-slow 4s ease-in-out infinite;
+}
+
+.animate-pulse-dark {
+	animation: pulse-dark 2s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+	animation: pulse-ring 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ============================================================================
+   ACCORDION ANIMATIONS (Radix UI)
+   ============================================================================ */
+
+.animate-accordion-down {
+	animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+	animation: accordion-up 0.2s ease-out;
+}
+
+/* ============================================================================
+   SHIMMER EFFECT (Benefits Cards)
+   ============================================================================ */
+
+.shimmer-on-hover {
+	position: relative;
+	overflow: hidden;
+}
+
+.shimmer-on-hover::before {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: linear-gradient(
+		120deg,
+		transparent 0%,
+		transparent 35%,
+		rgba(255, 255, 255, 0.2) 42%,
+		rgba(255, 255, 255, 0.8) 50%,
+		rgba(255, 255, 255, 0.2) 58%,
+		transparent 65%,
+		transparent 100%
+	);
+	transform: translateX(-100%) translateY(-100%);
+	pointer-events: none;
+}
+
+.shimmer-on-hover:hover::before {
+	animation: shimmer 2.2s ease-out;
+}
+
+/* ============================================================================
+   INFINITE SCROLL ANIMATIONS (Logo Marquee)
+   ============================================================================ */
+
+.animate-scroll {
+	animation: infinite-scroll 40s linear infinite;
+}
+
+.animate-scroll-slow {
+	animation: infinite-scroll 60s linear infinite;
+}
+
+.animate-scroll-fast {
+	animation: infinite-scroll 25s linear infinite;
+}
+
+.pause-animation:hover {
+	animation-play-state: paused;
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+.animate-in {
+	animation-fill-mode: forwards;
+}
+
+.animate-fill-mode-forwards {
+	animation-fill-mode: forwards;
+}
+
+/* ============================================================================
+   ACCESSIBILITY - REDUCED MOTION
+   Respects user preference to minimize motion for accessibility
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+	/* Disable continuous animations */
+	.animate-gradient-shift,
+	.cta-gradient-animation::before,
+	.animate-icon-pulse {
+		animation: none !important;
+	}
+
+	/* Disable pulse animations */
+	.animate-pulse,
+	.animate-pulse-slow,
+	.animate-pulse-dark,
+	.animate-pulse-ring {
+		animation: none !important;
+	}
+
+	/* Ensure ping animation is disabled */
+	.animate-ping {
+		animation: none !important;
+	}
+}

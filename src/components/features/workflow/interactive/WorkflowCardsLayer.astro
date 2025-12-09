@@ -1,0 +1,62 @@
+---
+import StepCardWrapper from '../cards/StepCard.wrapper.astro'
+import {
+	calculateStepPositions,
+	type WorkflowVariant,
+} from './workflow-positioning'
+import { STEP_COLORS, STEP_KEYS } from '../workflow-constants'
+
+export interface Props {
+	variant?: WorkflowVariant
+}
+
+// Get positioning data
+const stepPositions = calculateStepPositions()
+---
+
+<!-- Card overlay layer -->
+<div class="workflow-cards-container">
+	{
+		stepPositions.map((position, index) => {
+			const stepKey = STEP_KEYS[index]
+			const color = STEP_COLORS[index]
+
+			// Safety check
+			if (!stepKey || !color || !position) {
+				return null
+			}
+
+			// Map index to animation delay class
+			const delayClasses = [
+				'animation-delay-100',
+				'animation-delay-200',
+				'animation-delay-300',
+				'animation-delay-400',
+				'animation-delay-500',
+			]
+
+			return (
+				<div
+					class={`animate-fade-in absolute z-20 transition-transform duration-500 ease-out ${delayClasses[index] || ''}`}
+					style={`
+					left: ${position.x}px;
+					top: ${position.y}px;
+					transform-origin: center center;
+				`}
+					data-step-index={index}
+				>
+					<StepCardWrapper stepKey={stepKey} index={index} />
+				</div>
+			)
+		})
+	}
+</div>
+
+<style>
+	.workflow-cards-container {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		z-index: 2;
+	}
+</style>

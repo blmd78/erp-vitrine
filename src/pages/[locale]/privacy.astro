@@ -1,0 +1,153 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Header from '@/components/layout/header/Header.astro'
+import Footer from '@/components/layout/footer/Footer.astro'
+import LegalContent from '@/components/features/legal/LegalContent.astro'
+import Section from '@/components/features/legal/Section.astro'
+// Use new i18n system from middleware
+const { t } = Astro.locals
+
+const pageTitle = t('privacy.title')
+const pageDescription = t('privacy.description')
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+	<Header />
+
+	<main class="min-h-screen bg-white dark:bg-gray-900">
+		<LegalContent
+			title={pageTitle}
+			lastUpdated={t('privacy.lastUpdated.date')}
+		>
+			<Section title={t('privacy.intro.title')}>
+				<p>{t('privacy.intro.content')}</p>
+			</Section>
+
+			<Section
+				title={t('privacy.dataCollection.title')}
+				id="data-collection"
+			>
+				<p>{t('privacy.dataCollection.intro')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>{t('privacy.dataCollection.item1')}</li>
+					<li>{t('privacy.dataCollection.item2')}</li>
+					<li>{t('privacy.dataCollection.item3')}</li>
+					<li>{t('privacy.dataCollection.item4')}</li>
+				</ul>
+			</Section>
+
+			<Section title={t('privacy.dataUsage.title')} id="data-usage">
+				<p>{t('privacy.dataUsage.intro')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>{t('privacy.dataUsage.item1')}</li>
+					<li>{t('privacy.dataUsage.item2')}</li>
+					<li>{t('privacy.dataUsage.item3')}</li>
+					<li>{t('privacy.dataUsage.item4')}</li>
+					<li>{t('privacy.dataUsage.item5')}</li>
+				</ul>
+			</Section>
+
+			<Section
+				title={t('privacy.dataProtection.title')}
+				id="data-protection"
+			>
+				<p>{t('privacy.dataProtection.content1')}</p>
+				<p>{t('privacy.dataProtection.content2')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>{t('privacy.dataProtection.measure1')}</li>
+					<li>{t('privacy.dataProtection.measure2')}</li>
+					<li>{t('privacy.dataProtection.measure3')}</li>
+					<li>{t('privacy.dataProtection.measure4')}</li>
+				</ul>
+			</Section>
+
+			<Section title={t('privacy.cookies.title')} id="cookies">
+				<p>{t('privacy.cookies.intro')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>
+						<strong>{t('privacy.cookies.essential.title')}:</strong>
+						{t('privacy.cookies.essential.desc')}
+					</li>
+					<li>
+						<strong>{t('privacy.cookies.functional.title')}:</strong
+						>
+						{t('privacy.cookies.functional.desc')}
+					</li>
+					<li>
+						<strong>{t('privacy.cookies.analytics.title')}:</strong>
+						{t('privacy.cookies.analytics.desc')}
+					</li>
+				</ul>
+				<p>{t('privacy.cookies.control')}</p>
+			</Section>
+
+			<Section title={t('privacy.thirdParty.title')} id="third-party">
+				<p>{t('privacy.thirdParty.content1')}</p>
+				<p>{t('privacy.thirdParty.content2')}</p>
+			</Section>
+
+			<Section title={t('privacy.userRights.title')} id="user-rights">
+				<p>{t('privacy.userRights.intro')}</p>
+				<ul class="ml-6 list-disc space-y-2">
+					<li>
+						<strong>{t('privacy.userRights.access.title')}:</strong>
+						{t('privacy.userRights.access.desc')}
+					</li>
+					<li>
+						<strong
+							>{
+								t('privacy.userRights.rectification.title')
+							}:</strong
+						>
+						{t('privacy.userRights.rectification.desc')}
+					</li>
+					<li>
+						<strong>{t('privacy.userRights.erasure.title')}:</strong
+						>
+						{t('privacy.userRights.erasure.desc')}
+					</li>
+					<li>
+						<strong
+							>{
+								t('privacy.userRights.portability.title')
+							}:</strong
+						>
+						{t('privacy.userRights.portability.desc')}
+					</li>
+					<li>
+						<strong
+							>{t('privacy.userRights.objection.title')}:</strong
+						>
+						{t('privacy.userRights.objection.desc')}
+					</li>
+				</ul>
+				<p>{t('privacy.userRights.exercise')}</p>
+			</Section>
+
+			<Section title={t('privacy.retention.title')} id="data-retention">
+				<p>{t('privacy.retention.content')}</p>
+			</Section>
+
+			<Section title={t('privacy.changes.title')} id="changes">
+				<p>{t('privacy.changes.content')}</p>
+			</Section>
+
+			<Section title={t('privacy.contact.title')} id="contact">
+				<p>{t('privacy.contact.intro')}</p>
+				<div class="mt-4 rounded-lg bg-gray-50 p-6 dark:bg-gray-800">
+					<p class="font-semibold">{t('privacy.contact.company')}</p>
+					<p>
+						{t('privacy.contact.email')}: <a
+							href="mailto:contact@nextnode.fr"
+							class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+							>contact@nextnode.fr</a
+						>
+					</p>
+					<p>{t('privacy.contact.address')}</p>
+				</div>
+			</Section>
+		</LegalContent>
+	</main>
+
+	<Footer />
+</BaseLayout>

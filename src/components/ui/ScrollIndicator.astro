@@ -1,0 +1,157 @@
+---
+import { cn } from '@/lib/core/utils'
+import { ChevronDown } from 'lucide-react'
+
+interface Props {
+	className?: string
+	targetSelector?: string
+}
+
+const { className, targetSelector = 'section:nth-of-type(2)' } = Astro.props
+const { t } = Astro.locals
+---
+
+<div
+	class={cn(
+		'scroll-indicator animate-fade-in-up-lg animation-delay-1000',
+		'absolute bottom-10 left-1/2 -translate-x-1/2 z-10',
+		className,
+	)}
+	data-target={targetSelector}
+>
+	<button
+		type="button"
+		aria-label={t('common.ui.scrollToDiscoverAria')}
+		class={cn(
+			'group relative',
+			'flex flex-col items-center gap-4',
+			'cursor-pointer',
+		)}
+	>
+		<!-- Mouse SVG Container with glassmorphism -->
+		<div
+			class={cn(
+				'relative px-5 py-3 rounded-2xl',
+				'bg-white/10 ',
+				'backdrop-blur-md',
+				'border border-white/20 ',
+				'shadow-xl',
+				'transition-all duration-700 ease-out',
+				'group-hover:shadow-2xl group-hover:bg-white/15',
+				'group-hover:pb-8',
+			)}
+		>
+			<!-- Animated gradient border glow -->
+			<div
+				class="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-1000 ease-out group-hover:opacity-100"
+			>
+				<div
+					class="from-brand-blue-soft via-brand-green-soft to-brand-blue-soft animate-gradient-shift absolute inset-0 rounded-2xl bg-gradient-to-r blur-sm"
+				>
+				</div>
+			</div>
+
+			<!-- Mouse SVG -->
+			<svg
+				class="animate-bounce-down relative h-9 w-6"
+				viewBox="0 0 24 36"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<!-- Mouse body -->
+				<rect
+					x="1"
+					y="1"
+					width="22"
+					height="34"
+					rx="11"
+					class="stroke-brand-blue-muted"
+					stroke-width="2"
+					fill="none"></rect>
+
+				<!-- Scroll wheel -->
+				<circle
+					cx="12"
+					cy="10"
+					r="2"
+					class="fill-brand-green-muted animate-scroll-wheel"
+				></circle>
+			</svg>
+
+			<!-- ChevronDown - appears on hover -->
+			<div
+				class={cn(
+					'absolute left-1/2 -translate-x-1/2',
+					'opacity-0',
+					'animate-bounce-down',
+					'group-hover:opacity-100',
+					'transition-opacity duration-700 ease-out',
+				)}
+			>
+				<ChevronDown className="text-brand-blue-muted h-5 w-5" />
+			</div>
+		</div>
+
+		<!-- Text -->
+		<span
+			class={cn(
+				'text-xs font-medium tracking-wider',
+				'text-gray-600 ',
+				'group-hover:text-brand-blue-muted',
+				'transition-colors duration-700 ease-out',
+			)}
+		>
+			{t('common.ui.scrollToDiscoverAria')}
+		</span>
+	</button>
+</div>
+
+<style>
+	/* Base styles with transition */
+	.scroll-indicator {
+		transition: opacity 0.7s ease-out;
+	}
+
+	/* Hide on scroll */
+	.hidden-on-scroll {
+		opacity: 0;
+		pointer-events: none;
+	}
+</style>
+
+<script>
+	const scrollIndicators = document.querySelectorAll('.scroll-indicator')
+
+	scrollIndicators.forEach(indicator => {
+		const button = indicator.querySelector('button')
+		const targetSelector =
+			indicator.getAttribute('data-target') || 'section:nth-of-type(2)'
+
+		// Remove animation class after it completes to allow transitions
+		setTimeout(() => {
+			indicator.classList.remove('animate-fade-in-up-lg')
+		}, 1800) // 1s delay + 0.8s animation
+
+		// Hide indicator when scrolling down
+		const handleScroll = () => {
+			if (window.scrollY > 100) {
+				indicator.classList.add('hidden-on-scroll')
+			} else {
+				indicator.classList.remove('hidden-on-scroll')
+			}
+		}
+
+		window.addEventListener('scroll', handleScroll, { passive: true })
+
+		// Smooth scroll on click
+		button?.addEventListener('click', () => {
+			const target = document.querySelector(targetSelector)
+			if (target) {
+				target.scrollIntoView({
+					behavior: 'smooth',
+					block: 'start',
+				})
+			}
+		})
+	})
+</script>

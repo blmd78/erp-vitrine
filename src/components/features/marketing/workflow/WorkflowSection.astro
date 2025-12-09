@@ -1,0 +1,64 @@
+---
+import WorkflowJourney from '@/components/features/workflow/interactive/WorkflowJourney.astro'
+import MobileTimelineWrapper from '@/components/features/workflow/timeline/MobileTimeline.wrapper.astro'
+import { generateWorkflowSteps } from '@/components/features/workflow/workflow-utils'
+
+const { t } = Astro.locals
+const steps = generateWorkflowSteps()
+---
+
+<section
+	id="workflow-section"
+	class="relative overflow-hidden bg-gradient-to-br from-white/80 via-gray-50/80 to-white/80 py-12 sm:py-18 lg:py-24"
+>
+	<!-- Grid Pattern Background -->
+	<div class="[0.05] absolute inset-0 opacity-[0.03]">
+		<div
+			class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"
+		>
+		</div>
+	</div>
+
+	<!-- Subtle decorative elements -->
+	<div
+		class="bg-brand-blue-soft/20 absolute top-20 right-10 h-72 w-72 animate-pulse rounded-full opacity-50 blur-3xl"
+	>
+	</div>
+	<div
+		class="bg-brand-green-soft/20 absolute bottom-20 left-10 h-72 w-72 animate-pulse rounded-full opacity-50 blur-3xl"
+	>
+	</div>
+
+	<div class="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+		<!-- Section Header -->
+		<div class="mb-6 space-y-4 text-center md:mb-10 lg:mb-18">
+			<h2
+				class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl"
+			>
+				{t('home.workflow.title')}
+			</h2>
+			<p class="mx-auto max-w-3xl text-lg text-gray-600 sm:text-xl">
+				{t('home.workflow.subtitle')}
+			</p>
+			<p
+				class="mx-auto max-w-3xl text-base leading-relaxed text-gray-700 sm:text-lg"
+			>
+				{t('home.workflow.intro')}
+			</p>
+		</div>
+
+		<!-- Workflow Journey - Single Render with Responsive Content -->
+		<div class="mx-auto max-w-7xl">
+			<!-- Desktop/Tablet SVG Version (md and up) -->
+			<!-- Single render with responsive content sizing via Tailwind classes -->
+			<div class="hidden md:block">
+				<WorkflowJourney steps={steps} enableExpandable={true} />
+			</div>
+
+			<!-- Mobile Timeline Version (sm and down) -->
+			<div class="block md:hidden">
+				<MobileTimelineWrapper steps={steps} />
+			</div>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,52 @@
+---
+import { cva } from 'class-variance-authority'
+import { cn } from '@/lib/core/utils'
+import { Check } from 'lucide-react'
+import type { Plan } from '@/types/plans'
+
+export interface Props {
+	plan: Plan
+	features: readonly string[]
+}
+
+const { plan, features } = Astro.props
+
+const featureIconVariants = cva(
+	[
+		'mt-0.5 flex h-5 w-5 items-center justify-center rounded-full',
+		'flex-shrink-0',
+		'bg-gradient-to-r',
+	],
+	{
+		variants: {
+			plan: {
+				starter: 'from-brand-blue to-brand-blue-dark',
+				business: 'from-brand-green to-brand-green-dark',
+				enterprise: 'from-brand-blue-dark to-brand-green-dark',
+			},
+		},
+	},
+)
+---
+
+<div class="mb-6 flex-1 sm:mb-8">
+	<ul class="space-y-2 sm:space-y-3">
+		{
+			features.map(feature => (
+				<li class="group/feature flex items-start gap-3 transition-all duration-300 hover:translate-x-1">
+					<div
+						class={cn(
+							featureIconVariants({ plan }),
+							'transition-transform duration-300 group-hover/feature:scale-110',
+						)}
+					>
+						<Check className="h-3 w-3 text-white" />
+					</div>
+					<span class="text-sm leading-relaxed text-gray-700">
+						{feature}
+					</span>
+				</li>
+			))
+		}
+	</ul>
+</div>

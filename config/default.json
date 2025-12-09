@@ -1,0 +1,22 @@
+{
+	"app": {
+		"name": "NextNode Frontend",
+		"version": "1.0.0",
+		"features": ["email", "i18n", "analytics"],
+		"environment": "default"
+	},
+	"email": {
+		"provider": "resend",
+		"from": "noreply@nextnode.dev",
+		"to": "contact@nextnode.dev",
+		"replyTo": "support@nextnode.dev",
+		"templates": {
+			"projectRequest": {
+				"subject": "Nouvelle demande de projet : {{projectName}}",
+				"companyName": "NextNode",
+				"websiteUrl": "https://nextnode.dev",
+				"companyLogo": null
+			}
+		}
+	}
+}

@@ -1,0 +1,54 @@
+---
+/**
+ * PatternBackground - High-level component for background patterns
+ * Provides a simple API for adding decorative SVG patterns to components
+ */
+
+import SVGPatternGenerator from './SvgPatternGenerator.astro'
+import { cn } from '@/lib/core/utils'
+
+export interface Props {
+	pattern: 'dots' | 'grid' | 'waves' | 'circuit' | 'hexagon'
+	className?: string
+	opacity?: number
+	color?: string
+	uniqueId?: string
+	animated?: boolean
+}
+
+const {
+	pattern,
+	className = 'absolute inset-0',
+	opacity = 0.1,
+	color = 'currentColor',
+	uniqueId,
+	animated = false,
+} = Astro.props
+
+// Generate unique ID if not provided
+const patternId =
+	uniqueId || `pattern-${pattern}-${Math.random().toString(36).slice(2, 11)}`
+
+// Animation classes for patterns
+const animationClass = animated
+	? {
+			dots: 'animate-pulse',
+			grid: 'animate-pulse',
+			waves: 'animate-pulse-slow',
+			circuit: 'animate-bounce',
+			hexagon: 'animate-pulse',
+		}[pattern]
+	: ''
+---
+
+<div
+	class={cn(className, animationClass, 'pointer-events-none')}
+	style={color !== 'currentColor' ? `color: ${color}` : undefined}
+>
+	<SVGPatternGenerator
+		pattern={pattern}
+		id={patternId}
+		opacity={opacity}
+		className="h-full w-full"
+	/>
+</div>

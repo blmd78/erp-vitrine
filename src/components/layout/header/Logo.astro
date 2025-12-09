@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets'
+import { cn } from '@/lib/core/utils'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import logoImage from '@/assets/logo.png'
+
+interface Props {
+	variant?: 'desktop' | 'mobile'
+}
+
+const { variant = 'desktop' } = Astro.props
+const homeUrl = getRelativeLocaleUrl(Astro.currentLocale || 'en', '/')
+
+// Determine dimensions based on variant and logo aspect ratio (500:120 = 4.17:1)
+const height = variant === 'mobile' ? 40 : 56
+const width = variant === 'mobile' ? 167 : 235
+---
+
+<a href={homeUrl} class="flex items-center">
+	<Image
+		src={logoImage}
+		alt="NextNode"
+		width={width}
+		height={height}
+		densities={[1, 2, 3]}
+		quality={90}
+		format="webp"
+		loading="eager"
+		fetchpriority="high"
+		class={cn(
+			'w-auto transition-transform duration-300 hover:scale-105',
+			variant === 'mobile' ? 'h-10' : 'h-14',
+		)}
+	/>
+</a>
