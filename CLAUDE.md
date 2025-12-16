@@ -4,838 +4,182 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 🎯 Quick Reference
 
-**Critical Patterns** (most frequently used):
+**Type de projet:** Site vitrine monopage ERP
+**Stack:** Next.js 16 + TypeScript + Tailwind CSS v3 + next-intl
+**Gestionnaire de packages:** Yarn 4.10.3 (via Corepack)
+**Node version:** 20.9.0+
 
-| Pattern                  | When to Use                | Example Location                   |
-| ------------------------ | -------------------------- | ---------------------------------- |
-| **CVA variants**         | 3+ visual variants         | `CalActionButton.tsx:19`           |
-| **client:visible**       | Below-fold components      | Most pricing/marketing components  |
-| **client:only="react"**  | Framer Motion              | `OrbitingTech`                     |
-| **cn() utility**         | Combining Tailwind classes | All components                     |
-| **Glassmorphic styling** | Cards, overlays            | `backdrop-blur-sm bg-white/50`     |
-| **Translation keys**     | i18n                       | `t('common.meta.homepage.title')`  |
-| **Test colocation**      | Test organization          | `__tests__/ComponentName.test.tsx` |
-
-**Decision Trees:**
-
-```
-Component Architecture:
-├─ Static content only? → .astro component
-├─ Interactive but needs Astro context? → .astro wrapper + .tsx
-└─ Pure React interactivity? → .tsx with client:* directive
-
-Client Directive:
-├─ Above fold + interactive? → client:load
-├─ Below fold + interactive? → client:visible
-├─ Background/non-critical? → client:idle
-└─ Framer Motion/React-only APIs? → client:only="react"
-
-Styling Approach:
-├─ 3+ visual variants? → CVA with compound variants
-├─ 2-3 simple variants? → cn() with conditionals
-└─ One-off styling? → Inline Tailwind
-```
-
-## Essential Commands
-
-### Development Workflow
+## 🚀 Démarrage rapide
 
 ```bash
-# Start development server with hot reload
-pnpm dev
+# Activer Node 20 et Corepack
+source ~/.nvm/nvm.sh
+nvm use 20
+corepack enable
 
-# Build for production (includes astro check)
-pnpm build
+# Installer les dépendances
+yarn install
 
-# Preview production build locally
-pnpm preview
+# Lancer le serveur de développement
+yarn dev
 ```
 
-### Code Quality Pipeline
+Le site sera accessible sur http://localhost:3000
 
-Run these commands in order after development work:
-
-```bash
-# 1. Lint and auto-fix code with Biome
-pnpm lint
-
-# 2. Type checking (Astro + TypeScript)
-pnpm type-check
-
-# 3. Run test suite
-pnpm test
-
-# 4. Test with coverage reports
-pnpm test:coverage
-```
-
-### Testing Commands
-
-```bash
-# Watch mode for active development
-pnpm test:watch
-
-# Interactive test UI
-pnpm test:ui
-```
-
-### Utility Commands
-
-```bash
-# Format code with Prettier
-pnpm format
-
-# Clean build artifacts and cache
-pnpm clean
-
-# Run commitlint (triggered by git hooks)
-pnpm commitlint
-
-# Run lint-staged (triggered by pre-commit)
-pnpm lint-staged
-```
-
-## Architecture Overview
-
-### Core Technology Stack
-
-- **Astro 5.x** with React integration for selective hydration
-- **Tailwind CSS v4** for styling with design tokens
-- **TypeScript** in strict mode throughout
-- **Vitest** for testing with jsdom environment
-- **Node.js adapter** for standalone server deployment
-
-### Key Architectural Patterns
-
-#### 1. Internationalization (i18n) System
-
-- **Manual routing**: URLs like `/en/page` and `/fr/page`
-- **Middleware-driven**: `src/middleware.ts` handles locale detection and URL mapping
-- **Unified t() function**: Works both server-side (Astro) and client-side (React)
-- **Translation files**: Structured dictionaries in `src/i18n/locales/`
-- **Context injection**: Middleware injects `locale` and `t` into `context.locals`
-
-#### 2. Configuration Management
-
-- **Environment-based configs**: JSON files in `config/{dev,prod,test}.json`
-- **Type-safe access**: Via `src/lib/config/` with dot notation (`getConfig('email.from')`)
-- **Runtime loading**: Dynamic config resolution based on NODE_ENV
-
-#### 3. Component Organization
+## 📁 Architecture du projet
 
 ```
-src/components/
-├── common/          # Shared utility components
-├── features/        # Business logic components
-│   ├── marketing/   # Marketing-related features
-│   ├── workflow/    # Complex workflow visualizations
-│   └── pricing/     # Pricing page components
-├── layout/          # Header, footer, navigation
-└── ui/             # Base design system components
+├── app/
+│   ├── [locale]/          # Pages avec routing i18n
+│   │   ├── layout.tsx     # Layout par locale (FR/EN)
+│   │   ├── page.tsx       # Page monopage principale
+│   │   └── globals.css    # Styles globaux Tailwind
+│   └── layout.tsx         # Layout racine
+├── components/            # Composants React
+│   ├── Navigation.tsx     # Barre de navigation fixe
+│   ├── Hero.tsx          # Section Hero
+│   ├── About.tsx         # Section À propos
+│   ├── Services.tsx      # Section Services
+│   ├── Contact.tsx       # Section Contact + Formulaire
+│   └── LanguageSwitcher.tsx  # Switch FR/EN
+├── i18n/                 # Configuration i18n
+│   ├── config.ts         # Locales supportées (fr, en)
+│   └── request.ts        # Config next-intl
+├── messages/             # Traductions JSON
+│   ├── fr.json          # Français
+│   └── en.json          # Anglais
+└── middleware.ts        # Middleware i18n Next.js
 ```
 
-#### 4. State Management
+## 🎨 Styling
 
-- **React hooks**: Custom hooks in `src/hooks/` for client-side state
-    - `useOutsideClick`: Detect clicks outside elements (modals, dropdowns)
-    - `useScrollAnimation`: Scroll-based animation triggers
-- **No external state library**: Pure React patterns with local component state
-- **Global state**: Managed via client-side managers (theme, language) with custom events
+**Tailwind CSS v3.4.1**
+- Configuration: `tailwind.config.ts`
+- PostCSS: `postcss.config.mjs`
+- Classes utilitaires disponibles dans tous les composants
+- Variables CSS personnalisées dans `globals.css`
 
-#### 5. Email System
+**Variables principales:**
+```css
+--background: #ffffff (light) / #0a0a0a (dark)
+--foreground: #171717 (light) / #ededed (dark)
+```
 
-- **React Email**: Components in `emails/` directory
-- **Resend integration**: Production email delivery
-- **Template system**: Reusable email components with type safety
-- **API endpoint**: `/api/send-email.ts` for form submissions
+## 🌍 Internationalisation (i18n)
 
-#### 6. SEO & Local Search Optimization
+**next-intl configuré pour:**
+- Français (fr) - langue par défaut
+- Anglais (en)
 
-- **Automatic Sitemap**: Generated by @astrojs/sitemap with custom SEO priorities for Paris local search
-    - French pages prioritized (1.0 for homepage, 0.9 for pricing, 0.8 for how-we-work)
-    - English pages as secondary market (0.7, 0.6, 0.5 respectively)
-    - Automatic i18n hreflang attributes for bilingual SEO
-    - Custom changefreq settings (weekly for homepage, monthly for main pages, yearly for legal)
-- **Schema.org**: LocalBusiness data optimized for Paris/Île-de-France market
-- **Meta optimization**: Centralized SEO component with locale-specific content
-- **Local targeting**: Paris coordinates, service areas, and French market focus
-- **Robots.txt**: Optimized crawl directives for French search engines
+**Utilisation dans les composants:**
+```tsx
+'use client';
+import { useTranslations } from 'next-intl';
 
-### Performance Optimizations
-
-#### Bundle Splitting (astro.config.mjs)
-
-- **Vendor chunks**: React, Radix UI, utilities separated
-- **Feature-based splitting**: Workflow and marketing components
-- **Icon isolation**: Lucide React in separate chunk
-
-#### SSR + Selective Hydration
-
-- **Server-side rendering** for initial page load
-- **Client components** only when interactivity needed
-- **Progressive enhancement** approach
-
-### Development Patterns
-
-#### Import Standards
-
-- **ES modules only**: Never use `require()`
-- **Arrow functions**: `const fn = () => {}` preferred
-- **Destructuring**: Used extensively for clean code
-- **Strong typing**: No `any` types allowed, minimal `unknown`
-
-#### Component Patterns
-
-- **Astro components**: `.astro` for static/SSR content
-- **React components**: `.tsx` for interactive features
-- **Wrapper pattern**: `.astro` wrapper around `.tsx` for Astro integration (e.g., `StepCard.wrapper.astro` → `StepCard.tsx`)
-- **Props interfaces**: Defined per component with TypeScript
-- **Tailwind composition**: Design tokens via CSS custom properties
-
-#### CVA Component Variant Patterns
-
-**When to use CVA** (class-variance-authority):
-
-- ✅ Components with **3+ distinct visual variants** (button styles, card types, badge variants)
-- ✅ **Compound variants**: Styles that depend on multiple variant combinations
-- ✅ **Design system components**: Reusable UI elements with consistent variant patterns
-- ⛔ Simple conditional classes → Use `cn()` utility directly
-- ⛔ One-off components → Use inline Tailwind
-
-**Architecture** (real example from `CalActionButton.tsx`):
-
-```typescript
-import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '@/lib/core/utils'
-
-const buttonVariants = cva(
-  // Base classes (always applied)
-  [
-    'group relative overflow-hidden',
-    'transition-all duration-300',
-    'flex items-center justify-center',
-  ],
-  {
-    variants: {
-      // Visual context
-      variant: {
-        hero: ['rounded-xl', 'font-bold', 'shadow-xl'],
-        cta: ['rounded-xl', 'font-bold', 'shadow-2xl'],
-        pricing: ['rounded-md', 'font-semibold', 'shadow-sm'],
-      },
-      // Size variants
-      size: {
-        sm: ['px-4 py-2 text-sm', 'sm:px-5 sm:py-2.5'],
-        md: ['px-6 py-3 text-base', 'sm:px-8 sm:py-4'],
-        lg: ['px-8 py-4 text-lg', 'sm:px-10 sm:py-5'],
-      },
-      // Optional color theme
-      gradient: {
-        default: '',
-        blue: '',
-        green: '',
-      },
-    },
-    // Compound variants: multiple conditions
-    compoundVariants: [
-      {
-        variant: 'pricing',
-        gradient: 'blue',
-        class: 'before:from-brand-blue before:to-brand-blue-dark',
-      },
-    ],
-    // Always define defaults
-    defaultVariants: {
-      variant: 'hero',
-      size: 'md',
-      gradient: 'default',
-    },
-  },
-)
-
-// TypeScript integration
-interface ButtonProps extends VariantProps<typeof buttonVariants> {
-  children: React.ReactNode
-  className?: string
+export default function MyComponent() {
+  const t = useTranslations('SectionName');
+  return <h1>{t('key')}</h1>;
 }
-
-export const Button = ({ variant, size, gradient, className, children }: ButtonProps) => (
-  <button className={cn(buttonVariants({ variant, size, gradient }), className)}>
-    {children}
-  </button>
-)
 ```
 
-**Best practices:**
+**Ajouter une traduction:**
+1. Ajouter la clé dans `messages/fr.json` et `messages/en.json`
+2. Utiliser `t('key')` dans le composant
+3. Les URLs sont automatiques: `/` (fr) et `/en`
 
-- Group base classes logically (structure, colors, transitions)
-- One variant = one visual dimension (size, color, context)
-- Compound variants for multi-condition styling
-- Always provide `defaultVariants` to avoid undefined states
-- Use `VariantProps<typeof variants>` for TypeScript props
-- Combine with `cn()` for additional custom classes
+## 🧩 Sections du site monopage
 
-#### Client Directive Strategy
+1. **Hero** - Section d'accueil avec CTA
+2. **About** - Présentation + 3 valeurs (Innovation, Qualité, Satisfaction)
+3. **Services** - 3 services ERP (Finance, RH, Supply Chain)
+4. **Contact** - Formulaire + Informations de contact
 
-**Decision matrix** for Astro client directives:
+**Navigation:** Défilement fluide via `scrollIntoView({ behavior: 'smooth' })`
 
-| Directive             | When to Use                                                | Performance Impact                       | Examples in Project                                             |
-| --------------------- | ---------------------------------------------------------- | ---------------------------------------- | --------------------------------------------------------------- |
-| `client:load`         | Critical interactive components that must work immediately | High (loads/hydrates ASAP)               | `WorkflowCardsExpandable`, `StepCard`, `PremiumHero`            |
-| `client:visible`      | Below-fold interactive components                          | Low (only loads when scrolled into view) | `BentoDevTools`, `PricingCard`, `CTASection`, `CalActionButton` |
-| `client:idle`         | Non-critical background components                         | Very Low (loads after page idle)         | `ContextProvider`, `TransformationBeams`                        |
-| `client:only="react"` | React-specific libraries (Framer Motion)                   | Medium (no SSR, client-only)             | `OrbitingTech` (uses Framer Motion)                             |
+## 🛠️ Commandes importantes
 
-**Decision flow:**
+```bash
+# Développement
+yarn dev              # Serveur de dev sur port 3000
 
-1. Is it above the fold AND interactive? → `client:load`
-2. Is it below the fold? → `client:visible`
-3. Is it non-critical background functionality? → `client:idle`
-4. Does it use React-specific APIs or Framer Motion? → `client:only="react"`
+# Build
+yarn build           # Compilation production
+yarn start           # Serveur production
 
-**Performance tip**: Default to `client:visible` for below-fold content to minimize initial bundle size.
+# Utilitaires
+yarn lint            # ESLint
 
-#### CSS & Animation Standards
-
-**CSS Animations:**
-
-- **Keyframe animations**: MUST be placed in dedicated CSS files (`src/styles/animations.css`), NEVER inline in `.astro` components
-- **Animation organization**: Keep animations modular and reusable in separate stylesheets
-- **Tailwind animations**: Prefer Tailwind utilities when possible; use custom CSS only when necessary
-
-**Framer Motion Integration:**
-
-- **Library**: Using `motion` package (Framer Motion for React 19+)
-- **Client directive**: Always use `client:only="react"` for components with Framer Motion
-- **Reason**: Framer Motion requires React-specific APIs not available during SSR
-- **Example**: `<OrbitingTech client:only="react" />` in `TechTransformation.astro`
-
-**Animation strategy decision:**
-
-1. Simple transitions (opacity, transform) → Tailwind utilities
-2. Scroll-triggered animations → CSS keyframes + IntersectionObserver
-3. Complex interactive animations → Framer Motion with `client:only="react"`
-4. Physics-based animations → Framer Motion
-
-#### Radix UI Integration Patterns
-
-**Installed components:**
-
-- `@radix-ui/react-dialog` (modals)
-- `@radix-ui/react-accordion` (expandable sections)
-- `@radix-ui/react-progress` (progress bars)
-- `@radix-ui/react-select` (dropdowns)
-- `@radix-ui/react-slot` (composition utility)
-
-**Integration best practices:**
-
-1. **Accessibility first**: Radix components handle ARIA attributes automatically
-2. **Styling**: Radix ships unstyled - use Tailwind classes or CVA for styling
-3. **Data attributes**: Use `[data-state]` selectors for state-based styling
-4. **Client directives**: Radix components require `client:*` directives in Astro
-
-**Dialog/Modal pattern:**
-
-```typescript
-// Use client:load for critical modals, client:visible for below-fold
-<Dialog.Root open={open} onOpenChange={setOpen}>
-  <Dialog.Trigger asChild>
-    <button>Open</button>
-  </Dialog.Trigger>
-  <Dialog.Portal>
-    <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-    <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-      <Dialog.Title>Title</Dialog.Title>
-      <Dialog.Description>Description for screen readers</Dialog.Description>
-      {/* Content */}
-    </Dialog.Content>
-  </Dialog.Portal>
-</Dialog.Root>
+# Résoudre les conflits de port
+lsof -ti:3000 | xargs kill -9
 ```
 
-**State management:**
+## ⚙️ Configuration spécifique
 
-- **Controlled**: Use `open` + `onOpenChange` for external state control (programmatic control, multi-step flows)
-- **Uncontrolled**: Use `defaultOpen` for simple cases
+**Yarn 4 avec node-modules**
+- Mode: `nodeLinker: node-modules` (dans `.yarnrc.yml`)
+- Raison: Compatibilité Turbopack Next.js 16
 
-**Keyboard navigation**: Built-in for all components (Esc, Tab, Arrow keys)
+**Next.js + next-intl**
+- Plugin configuré dans `next.config.ts`
+- Middleware pour routing i18n dans `middleware.ts`
+- Deprecated warning sur "middleware" → ignorer ou migrer vers "proxy"
 
-#### Testing Strategy
+## 🐛 Problèmes courants
 
-**Test organization:**
-
-- **Colocation**: `__tests__/` folders next to implementation (e.g., `src/hooks/__tests__/useOutsideClick.test.tsx`)
-- **Naming**: `ComponentName.test.tsx` or `functionName.test.ts`
-- **Structure**: Comprehensive test suite for cookie management (`src/lib/cookies/__tests__/`)
-
-**Testing stack:**
-
-- **Runner**: Vitest with jsdom environment
-- **React testing**: React Testing Library (`@testing-library/react`)
-- **Assertions**: Vitest matchers + `@testing-library/jest-dom`
-- **Mocks**: Vitest `vi.fn()`, `vi.mock()`, `vi.spyOn()`
-- **Coverage**: V8 provider with JSON output (`pnpm test:coverage`)
-
-**Test pattern example** (from `StepCard.test.tsx`):
-
-```typescript
-import { cleanup, render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import StepCard from '../StepCard'
-
-describe('StepCard', () => {
-  afterEach(() => {
-    cleanup()        // Clean up DOM
-    vi.clearAllMocks() // Clear all mock calls
-  })
-
-  const defaultProps = {
-    stepKey: 'discovery',
-    title: 'Discovery & Strategy',
-    description: 'We dive deep into your business goals',
-  }
-
-  it('should render step card with correct content', () => {
-    render(<StepCard {...defaultProps} />)
-    expect(screen.getByText('Discovery & Strategy')).toBeInTheDocument()
-  })
-
-  it('should call onExpand when card is clicked', () => {
-    const onExpand = vi.fn()
-    const { container } = render(<StepCard {...defaultProps} onExpand={onExpand} />)
-
-    const cardElement = container.firstChild as HTMLElement
-    cardElement.click()
-
-    expect(onExpand).toHaveBeenCalledOnce()
-  })
-})
+**Port 3000 déjà utilisé:**
+```bash
+lsof -ti:3000 | xargs kill -9
+rm -f .next/dev/lock
+yarn dev
 ```
 
-**Best practices:**
-
-- **Always cleanup**: Use `afterEach(() => { cleanup(); vi.clearAllMocks() })`
-- **Test behavior, not implementation**: Focus on user interactions and outputs
-- **Mock external dependencies**: I/O, APIs, timers, DOM APIs
-- **Keep business logic real**: Don't over-mock internal logic
-
-#### Design System Guidelines
-
-**Glassmorphic Design Language:**
-
-The project uses a consistent glassmorphic design system with these core patterns:
-
-```typescript
-// Typical glassmorphic card (from workflow components)
-className="backdrop-blur-sm bg-white/50 dark:bg-brand-charcoal/50 border border-white/20"
-
-// Structure
-- backdrop-blur-sm/md/lg     # Glass effect
-- bg-{color}/{opacity}       # Semi-transparent background
-- border border-{color}/{opacity}  # Subtle borders
-- shadow-{size}              # Depth perception
+**Erreur Corepack:**
+```bash
+corepack enable
+corepack prepare yarn@4.10.3 --activate
 ```
 
-**cn() Utility Organization:**
-
-Group Tailwind classes in this order within `cn()`:
-
-```typescript
-cn(
-	// 1. Base: structure, colors, typography (with dark: variants)
-	'flex items-center p-4 bg-white dark:bg-gray-800 text-base',
-
-	// 2. Responsive: one line per breakpoint
-	'md:p-6 md:text-lg',
-	'lg:p-8 lg:text-xl',
-
-	// 3. States: hover/focus/active (with dark: variants)
-	'hover:shadow-lg dark:hover:shadow-xl',
-	'focus:ring-2 focus:ring-blue-500',
-
-	// 4. Conditional classes
-	isActive && 'bg-blue-500',
-	className, // External override at the end
-)
+**Cache Next.js corrompu:**
+```bash
+rm -rf .next
+yarn dev
 ```
 
-**Design tokens (Tailwind config):**
+**Tailwind ne s'applique pas:**
+- Vérifier que `globals.css` contient `@tailwind base/components/utilities`
+- Vérifier import dans `app/[locale]/layout.tsx`
+- Relancer le serveur
 
-- Brand colors: `brand-blue`, `brand-green`, `brand-charcoal`
-- Consistent spacing: Use Tailwind's spacing scale
-- Typography: Responsive text sizes with `sm:`, `md:`, `lg:` breakpoints
+## 📝 Bonnes pratiques
 
-**Component constants pattern:**
+1. **Composants:** Toujours marquer avec `'use client'` si utilisation de hooks
+2. **Traductions:** Ne jamais hardcoder du texte, toujours utiliser `t()`
+3. **Styles:** Préférer les classes Tailwind aux styles inline
+4. **Types:** TypeScript strict activé, toujours typer les props
+5. **Git:** Avant commit, vérifier que `yarn build` passe
 
-For components with shared visual patterns:
+## 🔄 Workflow de développement
 
-```typescript
-// src/components/features/workflow/workflow-constants.ts
-export const CARD_DIMENSIONS = {
-	width: 280,
-	height: 180,
-} as const
+1. Créer une branche pour la fonctionnalité
+2. Modifier les fichiers nécessaires
+3. Tester en local avec `yarn dev`
+4. Vérifier le build avec `yarn build`
+5. Commit et push
 
-export const STEP_COLORS = {
-	discovery: '#3B82F6', // blue
-	design: '#8B5CF6', // purple
-	development: '#10B981', // green
-	testing: '#F59E0B', // amber
-	deployment: '#EF4444', // red
-} as const
+## 🌐 Déploiement
 
-// Usage: import constants, don't duplicate values
+**Vercel (recommandé):**
+```bash
+yarn global add vercel
+vercel
 ```
 
-**When to extract constants:**
+**Variables d'environnement:** Aucune pour l'instant
 
-- ✅ Values used in **3+ places** (DRY principle)
-- ✅ **Animation configurations**: timing, delays, observer settings
-- ✅ **Magic numbers**: dimensions, coordinates, thresholds
-- ⛔ **CSS classes**: Use CVA or inline (except with `cn()`)
-- ⛔ **One-off values**: Keep inline for clarity
+## 📚 Documentation
 
-## Advanced Architectural Patterns
+- [Next.js 16](https://nextjs.org/docs)
+- [Tailwind CSS v3](https://tailwindcss.com/docs)
+- [next-intl](https://next-intl-docs.vercel.app/)
+- [Yarn 4](https://yarnpkg.com/)
 
-### Cookie Management System
-
-The project uses a **Strategy Pattern** for type-safe cookie management:
-
-- **Automatic strategy selection**: Cookie Store API (HTTPS) with document.cookie fallback (HTTP/localhost)
-- **Factory pattern**: `createCookieStrategy()` detects environment and selects appropriate implementation
-- **Type-safe API**: Consistent interface regardless of underlying implementation
-- **Server-side support**: Separate `createServerCookieManager()` for Astro middleware
-- **Location**: `src/lib/cookies/` with dedicated strategy files
-
-**Key files:**
-
-- `factory.ts`: Strategy factory with protocol detection
-- `cookie-store-strategy.ts`: Modern Cookie Store API implementation
-- `document-cookie-strategy.ts`: Legacy fallback implementation
-- `server.ts`: Server-side cookie management for middleware
-- `__tests__/`: Comprehensive test suite with mock helpers
-
-### Client-Side State Management
-
-**Theme Manager** (`src/lib/client/theme-manager.ts`):
-
-- Theme detection from cookie or system preference
-- Global state via `window.currentTheme` and `window.initialTheme`
-- SSR-safe with middleware injection (`locals.theme`)
-- Custom event dispatching (`theme-changed`) for React components
-- Automatic icon updates across all theme toggle buttons
-
-**Language Manager** (`src/lib/client/language-manager.ts`):
-
-- Dynamic URL generation based on `SUPPORTED_LOCALES`
-- Cookie persistence before navigation
-- HTML `lang` attribute synchronization
-- Event delegation for language selector buttons
-- Integration with i18n middleware
-
-### Configuration Architecture
-
-**Two-tier configuration system:**
-
-#### 1. Config Files (Dynamic Values)
-
-Pattern: `src/lib/config/**/*-config.ts`
-
-- **Animation configs**: Timing, delays, keyframe values, observer settings
-- **Component configs**: Tech orbits, transformation beams, workflow animations
-- **Naming convention**: `*-config.ts` for centralized configuration objects
-- **Usage**: Import constants for consistent animations and behaviors
-
-**Examples:**
-
-- `marketing/tech-animation-config.ts`: OBSERVER_CONFIG, ANIMATION_DURATIONS, KEYFRAME_VALUES
-- `marketing/orbiting-tech-config.ts`: Icon positions, animation parameters
-- `workflow/workflow-animation-config.ts`: Journey timeline configuration
-
-#### 2. UI Constants (Reusable Patterns)
-
-Pattern: `src/lib/ui/*-constants.ts`
-
-- **CSS patterns**: Pre-composed Tailwind classes with `cn()` utility
-- **Reusable styles**: Cards, gradients, typography, spacing
-- **Design tokens**: Consistent visual patterns across components
-- **Type-safe**: Constants exported with `as const` for literal types
-
-**Example:** `marketing-constants.ts`
-
-```typescript
-export const MARKETING_CARDS = {
-	container: cn(
-		'rounded-3xl p-8 sm:p-10',
-		'bg-white/50 dark:bg-brand-charcoal/50',
-		'backdrop-blur-sm',
-	),
-} as const
-```
-
-### Animation System Architecture
-
-**Observer-based animation triggers:**
-
-1. **Keyframe definitions**: All `@keyframes` in `src/styles/animations.css`
-2. **Configuration**: Centralized in `*-animation-config.ts` files
-3. **Observer logic**: Dedicated TypeScript files (e.g., `TechTransformationObserver.ts`)
-4. **Execution flow**:
-    - Component adds `data-delay` attributes to elements
-    - Observer script watches section visibility (IntersectionObserver)
-    - Classes toggled: `.tech-animate` → `.tech-animating` → `.tech-animated`
-    - Configuration values imported from central config
-
-**Key principles:**
-
-- **NEVER** define keyframes inline in `.astro` components
-- **ALWAYS** use dedicated CSS files for animations
-- **ALWAYS** centralize timing/delay values in config files
-- **Use** IntersectionObserver for scroll-triggered animations
-- **Extract** observer logic to separate TypeScript modules
-
-### Middleware Modularity
-
-The middleware system follows **single responsibility principle**:
-
-**Core middleware modules** (`src/lib/middleware/`):
-
-- `i18n.ts`: Locale detection and translation context injection
-- `url-mapping.ts`: Route normalization and locale prefix handling
-- `logging.ts`: Structured request/response logging with correlation IDs
-- `metrics.ts`: Performance tracking and analytics
-- `theme.ts`: Theme preference detection and SSR injection
-- `utils.ts`: Shared helpers (cookie parsing, validation, request filtering)
-
-**Request flow:**
-
-1. URL processing → locale extraction
-2. Theme detection → `locals.theme` injection
-3. I18n setup → `locals.t` and `locals.locale` injection
-4. Metrics collection → performance tracking
-5. Logging → structured output
-
-## Environment Configuration
-
-### Required Environment Variables
-
-- `HOST`: Server host (default: 0.0.0.0)
-- `PORT`: Server port (default: 4321)
-- `URL`: Public site URL for canonical links
-
-### Config Files Structure
-
-```
-config/
-├── default.json     # Base configuration
-├── dev.json         # Development overrides
-├── prod.json        # Production settings
-└── test.json        # Test environment
-```
-
-### TypeScript Definitions Structure
-
-```
-types/
-├── config.d.ts      # Configuration type definitions
-├── env.d.ts         # Environment and Astro global types
-├── global.d.ts      # Global type definitions
-└── plans.ts         # Pricing plan type definitions
-```
-
-### SEO & Logging Structure
-
-```
-src/lib/
-├── seo/
-│   └── schema.ts    # Schema.org structured data utilities
-└── logging/
-    └── index.ts     # NextNode logger instances (astroLogger, etc.)
-```
-
-## Common Development Workflows
-
-### Adding New Features
-
-1. Create components in appropriate `src/components/features/` subdirectory
-2. Add translations to both `en/` and `fr/` locale files
-3. Update routing in `src/pages/[locale]/` if needed
-4. Add tests in same directory as component
-5. Run quality pipeline: `pnpm lint && pnpm type-check && pnpm test`
-
-### Internationalization Updates
-
-**Translation key conventions:**
-
-- **Pattern**: `{namespace}.{feature}.{section}.{element}`
-- **Namespaces**: `common`, `home`, `pricing`, `workflow`, etc.
-- **Examples**:
-    - `common.meta.homepage.title` → Page metadata
-    - `home.hero.title` → Hero section title
-    - `pricing.sections.plans.subtitle` → Pricing plans subtitle
-
-**File organization:**
-
-```
-src/i18n/locales/
-├── en/
-│   ├── common.ts    # Shared translations (navigation, UI, meta)
-│   ├── home.ts      # Homepage-specific
-│   ├── pricing.ts   # Pricing page
-│   └── workflow.ts  # Workflow feature
-└── fr/              # Same structure, French translations
-```
-
-**Usage patterns:**
-
-```typescript
-// Server-side (Astro)
-const { t } = Astro.locals
-const title = t('common.meta.homepage.title')
-
-// Client-side (React)
-import { useI18n } from '@/i18n/use-i18n'
-const { t } = useI18n()
-const buttonText = t('home.cta.primaryButton')
-
-// Arrays (for mapping)
-const levels = t('pricing.support.levels') // Returns array
-```
-
-**Best practices:**
-
-- Keep keys lowercase with dots (no camelCase in keys)
-- Use descriptive names: `hero.primaryButton` not `hero.btn1`
-- Group related translations in same file
-- Test both `/en/` and `/fr/` URL prefixes
-- Verify middleware locale detection works correctly
-
-### Email Template Development
-
-1. Create React Email component in `emails/` directory
-2. Add to template exports in `src/lib/email/templates/index.ts`
-3. Test rendering via `/api/send-email` endpoint
-4. Configure Resend API key for production
-
-### SEO Configuration and Optimization
-
-#### Using the SEO Component
-
-All pages should use the centralized SEO component via BaseLayout:
-
-```astro
----
-const title = t('common.meta.homepage.title')
-const description = t('common.meta.homepage.description')
----
-
-<BaseLayout title={title} description={description} type="website">
-	<!-- Page content -->
-</BaseLayout>
-```
-
-#### Adding New Page SEO
-
-1. Add meta translations to `src/i18n/locales/{en,fr}/common.ts`:
-
-    ```typescript
-    meta: {
-      newPage: {
-        title: 'Page Title | NextNode - Agence Web Paris',
-        description: 'SEO-optimized description with Paris keywords...'
-      }
-    }
-    ```
-
-2. Use in page component:
-    ```astro
-    const title = t('common.meta.newPage.title') const description =
-    t('common.meta.newPage.description')
-    ```
-
-#### Schema.org Updates
-
-- Edit `src/lib/seo/schema.ts` for structured data changes
-- LocalBusiness schema covers Paris/Île-de-France service area
-- Automatically injected in all pages via SEO component
-- Supports both French and English locales
-
-## Critical Implementation Details
-
-### Middleware Architecture (Recently Refactored)
-
-The middleware system has been decomposed into specialized modules in `src/lib/middleware/`:
-
-#### Core Middleware Modules
-
-1. **`i18n.ts`**: Internationalization handling
-    - Locale detection from URL path and Accept-Language header
-    - Translation context setup for both Astro and React components
-    - Fallback locale management
-
-2. **`url-mapping.ts`**: URL path processing
-    - Route mapping and normalization
-    - Locale prefix handling (`/en/`, `/fr/`)
-    - Internal navigation and redirects
-
-3. **`logging.ts`**: Request/response logging
-    - Structured request logging with correlation IDs
-    - Error tracking and performance monitoring
-    - Integration with @nextnode/logger
-
-4. **`metrics.ts`**: Performance metrics collection
-    - Page view tracking
-    - Response time measurement
-    - User interaction analytics
-
-5. **`utils.ts`**: Shared middleware utilities
-    - Common helper functions
-    - Validation and parsing utilities
-    - Error handling patterns
-
-#### Middleware Request Flow
-
-1. **URL processing**: Route normalization and locale extraction
-2. **I18n setup**: Language detection and translation context injection
-3. **Metrics collection**: Performance tracking and analytics
-4. **Logging**: Structured request/response logging
-5. **Context injection**: Middleware injects `locale` and `t` into `context.locals`
-
-### Workflow Journey Component
-
-- **Complex interactive visualization** in `src/components/features/workflow/`
-- **SVG animations** with coordinated state management
-- **Modal system** for step details with keyboard navigation
-- **Mobile responsive** with separate timeline component
-
-### Build Process
-
-1. `astro check` validates Astro components and routing
-2. TypeScript compilation with strict mode (types/ directory)
-3. Tailwind CSS v4 processing with design tokens
-4. Vite bundling with custom chunk strategy
-5. Node.js adapter for standalone deployment
-
-### Deployment Configuration
-
-#### Railway Platform
-
-- **Configuration**: `railway.toml` with Docker builder
-- **Health checks**: Built-in endpoint monitoring at `/`
-- **Restart policies**: Automatic failure recovery
-- **Environment**: Production-optimized settings
-- **Watch patterns**: Optimized file change detection
-
-#### Docker Multi-stage Build
-
-- **Base stage**: Node.js environment setup
-- **Build stage**: Dependency installation and compilation
-- **Production stage**: Optimized runtime with minimal footprint
-- **Health check**: Integrated container health monitoring
-
-# important-instruction-reminders
-
-Do what has been asked; nothing more, nothing less.
-NEVER create files unless they're absolutely necessary for achieving your goal.
-ALWAYS prefer editing an existing file to creating a new one.
-NEVER proactively create documentation files (\*.md) or README files. Only create documentation files if explicitly requested by the User.

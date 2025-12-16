@@ -1,0 +1,43 @@
+{
+  "Hero": {
+    "title": "Votre Solution ERP Complète",
+    "subtitle": "Optimisez la gestion de votre entreprise avec notre plateforme intuitive et performante",
+    "cta": "Découvrir nos solutions"
+  },
+  "About": {
+    "title": "À Propos",
+    "intro": "Nous sommes une entreprise spécialisée dans les solutions ERP modernes et innovantes.",
+    "mission": "Notre mission est de fournir des outils performants pour optimiser la gestion de votre entreprise.",
+    "values": "Nos valeurs",
+    "value1": "Innovation",
+    "value2": "Qualité",
+    "value3": "Satisfaction client"
+  },
+  "Services": {
+    "title": "Nos Services",
+    "service1Title": "Gestion Financière",
+    "service1Description": "Comptabilité, budgets et reporting financier en temps réel",
+    "service2Title": "Gestion des Ressources Humaines",
+    "service2Description": "Planification, paie et suivi des performances",
+    "service3Title": "Gestion de la Chaîne d'Approvisionnement",
+    "service3Description": "Stocks, achats et logistique optimisés"
+  },
+  "Contact": {
+    "title": "Contactez-nous",
+    "intro": "N'hésitez pas à nous contacter pour toute question ou demande de démonstration.",
+    "name": "Nom",
+    "email": "Email",
+    "message": "Message",
+    "send": "Envoyer",
+    "info": "Informations",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "success": "Message envoyé avec succès!"
+  },
+  "Navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "services": "Services",
+    "contact": "Contact"
+  }
+}

@@ -1,1 +1,0 @@
-export { ResendProvider } from './resend'
